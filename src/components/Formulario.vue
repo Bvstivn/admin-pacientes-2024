@@ -81,7 +81,7 @@
       <input
         type="submit"
         class="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-colors"
-        value="REGISTRAR PACIENTES"
+        :value="editando ? 'Guardar Cambios' : 'Registrar Paciente'"
       />
     </form>
   </div>
@@ -89,7 +89,7 @@
 
 <script setup>
 //Vue
-import { reactive } from "vue";
+import { reactive, computed } from "vue";
 //Components
 import Alerta from "@/components/Alerta.vue";
 
@@ -116,6 +116,10 @@ const props = defineProps({
     type: String,
     required: true
   },
+  id:{
+    type: [String, null],
+    required: true,
+  }
 });
 
 const emit = defineEmits(['update:nombrePropietario', 'update:nombreMascota', 'update:alta', 'update:email', 'update:sintomas', 'guardar-paciente']);
@@ -127,6 +131,8 @@ const alerta = reactive({
   mensaje: "",
 });
 
+const editando = computed(() => props.id);
+
 //Methods
 const validar = () => {
   if (Object.values(props).includes("")) {
@@ -135,5 +141,12 @@ const validar = () => {
     return;
   }
   emit('guardar-paciente');
+  alerta.mensaje = 'Paciente Almacenado Correctamente';
+  alerta.tipo = 'exito';
+
+  setTimeout(() => {
+    alerta.tipo = '';
+    alerta.mensaje = '';
+  }, 3000);
 };
 </script>
